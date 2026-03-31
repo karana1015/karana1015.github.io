@@ -1,0 +1,517 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>karana1015 | karana1015</title><meta name="author" content="karana"><meta name="copyright" content="karana"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="博客后台管理系统              body {             font-family: &#39;Segoe UI&#39;, sans-serif;             background: #f0f2f5;             margin: 0;             padding: 20px;         }          .c"><meta property="og:type" content="website"><meta property="og:title" content="karana1015"><meta property="og:url" content="http://example.com/admin/index.html"><meta property="og:site_name" content="karana1015"><meta property="og:description" content="博客后台管理系统              body {             font-family: &#39;Segoe UI&#39;, sans-serif;             background: #f0f2f5;             margin: 0;             padding: 20px;         }          .c"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="http://example.com/img/avatar.jpg"><meta property="article:published_time" content="2026-03-31T02:37:05.442Z"><meta property="article:modified_time" content="2026-03-16T07:24:47.815Z"><meta property="article:author" content="karana"><meta property="article:tag" content="Node.js, Hexo, Redis, AI, 博客"><meta name="twitter:card" content="summary"><meta name="twitter:image" content="http://example.com/img/avatar.jpg"><script type="application/ld+json"></script><link rel="shortcut icon" href="/img/avatar.jpg"><link rel="canonical" href="http://example.com/admin/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css"><script>(() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE={title:"karana1015",isHighlightShrink:!1,isToc:!1,pageType:"page"}</script><meta name="description" content="基于Node.js+Hexo+Koa2+Redis的个人博客搭建"><meta name="keywords" content="Node.js, Hexo, Redis, AI, 博客"><meta name="author" content="karana"><meta property="og:title" content=""><meta property="og:description" content=""><meta property="og:type" content="article"><meta property="og:url" content="http://example.comadmin/index.html"><meta property="og:image" content="http://example.com/img/default-cover.jpg"><meta name="generator" content="Hexo 7.0.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      if ($loadingBox.classList.contains('loaded')) return
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+
+  if (document.readyState === 'complete') {
+    preloader.endLoading()
+  } else {
+    window.addEventListener('load', preloader.endLoading)
+    document.addEventListener('DOMContentLoaded', preloader.endLoading)
+    // Add timeout protection: force end after 7 seconds
+    setTimeout(preloader.endLoading, 7000)
+  }
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div class="bg-animation" id="web_bg" style="background-image:url(/img/backgroud.jpg)"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror='this.onerror=null,this.src="/img/friend_404.gif"' alt="avatar"></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">36</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-book"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/admin/"><i class="fa-fw fas fa-cog"></i><span> 后台管理</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="not-home-page" id="page-header" style="background-image:url(/img/backgroud2.jpg)"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">karana1015</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-book"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/admin/"><i class="fa-fw fas fa-cog"></i><span> 后台管理</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="page-site-info"><h1 id="site-title"></h1></div></header><main class="layout" id="content-inner"><div id="page"><div class="container" id="article-container"><!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>博客后台管理系统</title><style>body{font-family:'Segoe UI',sans-serif;background:#f0f2f5;margin:0;padding:20px}.container{max-width:900px;margin:0 auto}.card{background:#fff;padding:20px;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,.1);margin-bottom:20px}h2{margin-top:0;color:#333;border-bottom:2px solid #007bff;padding-bottom:10px;display:inline-block}.form-group{margin-bottom:15px}label{display:block;margin-bottom:5px;font-weight:700}input[type=text],textarea{width:100%;padding:10px;border:1px solid #ddd;border-radius:4px;box-sizing:border-box}textarea{height:150px;resize:vertical}button{background:#007bff;color:#fff;border:none;padding:10px 20px;border-radius:4px;cursor:pointer;font-size:16px}button:hover{background:#0056b3}button.secondary{background:#6c757d}.post-item{border-bottom:1px solid #eee;padding:10px 0;display:flex;justify-content:space-between;align-items:center}.post-item:last-child{border-bottom:none}.post-title{font-weight:700;color:#333}.post-date{color:#999;font-size:.9em;margin-left:10px}.tag{background:#eef;color:#55a;padding:2px 6px;border-radius:4px;font-size:.8em;margin-left:5px}.loading{color:#666;font-style:italic}.success{color:green}.error{color:red}</style></head><body><div class="container"><h1>📝 个人博客后台管理系统</h1><div class="card"><h2>发布新文章 (同步至 Hexo)</h2><div style="background:#f0f7ff;padding:15px;border-radius:8px;margin-bottom:20px"><h3 style="margin:0 0 10px 0;color:#06c;font-size:16px">🤖 AI 智能创作</h3><div style="display:flex;gap:10px;flex-wrap:wrap"><button onclick="aiGenerateArticle()" style="background:#06c;font-size:14px">✨ AI 生成文章</button> <button onclick="aiPolishContent()" style="background:#28a745;font-size:14px">✏️ AI 润色</button> <button onclick="aiGenerateSummary()" style="background:#17a2b8;font-size:14px">📝 AI 生成摘要</button></div></div><div class="form-group"><label>文章标题</label> <input type="text" id="title" placeholder="输入标题或关键词..."></div><div class="form-group"><label>文章关键词（AI 生成时用）</label> <input type="text" id="keywords" placeholder="例如：Node.js, Redis, 缓存"></div><div class="form-group"><label>文章内容 (支持 Markdown)</label> <textarea id="content" placeholder="输入内容，或使用 AI 功能自动生成..." style="height:300px"></textarea></div><div id="aiSummaryBox" style="display:none;background:#f0f7ff;padding:20px;border-radius:8px;margin-bottom:20px;border-left:4px solid #06c"><div style="color:#06c;font-weight:700;font-size:16px;margin-bottom:10px">🤖 AI 生成摘要</div><p id="aiSummaryText" style="margin:0;color:#333;line-height:1.8"></p></div><button id="publishBtn" onclick="publishPost()">🚀 发布文章</button> <span id="publishMsg" style="margin-left:10px"></span></div><div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><h2>已发布文章列表 (Hexo)</h2><button class="secondary" onclick="loadPosts()" style="font-size:14px">🔄 刷新列表</button></div><div id="editorArea" style="display:none;background:#f9f9f9;padding:15px;margin-bottom:15px;border:1px solid #eee"><h3 id="editorTitle">编辑文章</h3><input type="hidden" id="editFilename"><div class="form-group"><label>文章标题</label> <input type="text" id="editTitle"></div><div class="form-group"><label>文章内容</label> <textarea id="editContent"></textarea></div><button onclick="saveEdit()" style="background:#28a745">💾 保存修改</button> <button onclick="cancelEdit()" class="secondary" style="margin-left:10px">取消</button></div><div id="postList"><div class="loading">加载中...</div></div></div><div class="card"><h2>数据库备份列表 (MySQL + Redis) <span id="redisStatus" style="font-size:12px;font-weight:400;margin-left:10px;padding:2px 6px;background:#eee;border-radius:4px">等待查询...</span></h2><button class="secondary" onclick="loadDbPosts()" style="margin-bottom:10px;font-size:14px">🔄 刷新列表 (观察控制台 Redis 日志)</button><div id="dbPostList"><div class="loading">加载中...</div></div></div></div><script>const API_BASE = 'http://localhost:3000';
+        let isEditing = false;
+        let currentEditFilename = '';
+
+        // 发布文章 - 修复摘要显示问题
+        async function publishPost() {
+            const title = document.getElementById('title').value;
+            const content = document.getElementById('content').value;
+            const msgSpan = document.getElementById('publishMsg');
+
+            if (!title || !content) {
+                alert('标题和内容不能为空！');
+                return;
+            }
+
+            msgSpan.textContent = '🤖 AI 正在生成摘要...';
+            msgSpan.className = 'loading';
+
+            try {
+                const res = await fetch(`${API_BASE}/api/hexo/publish`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, content })
+                });
+                const data = await res.json();
+
+                if (data.code === 200) {
+                    msgSpan.textContent = '✅ 发布成功！';
+                    msgSpan.className = 'success';
+
+                    // 【修复】先显示 AI 摘要，再清空表单
+                    if (data.data.aiSummary) {
+                        document.getElementById('aiSummaryText').textContent = data.data.aiSummary;
+                        document.getElementById('aiSummaryBox').style.display = 'block';
+
+                        // 5 秒后自动隐藏摘要框并清空表单
+                        setTimeout(() => {
+                            document.getElementById('aiSummaryBox').style.display = 'none';
+                            document.getElementById('title').value = '';
+                            document.getElementById('content').value = '';
+                            msgSpan.textContent = '';
+                        }, 5000);
+                    }
+
+                    loadPosts();
+                } else {
+                    msgSpan.textContent = '❌ ' + data.message;
+                    msgSpan.className = 'error';
+                }
+            } catch (e) {
+                msgSpan.textContent = '❌ 网络错误';
+                msgSpan.className = 'error';
+            }
+        }
+
+        // 准备编辑 - 后端已彻底过滤，前端直接使用
+        async function prepEdit(filename) {
+            const titleInput = document.getElementById('title');
+            const contentInput = document.getElementById('content');
+            const publishBtn = document.getElementById('publishBtn');
+            const msgSpan = document.getElementById('publishMsg');
+
+            const res = await fetch(`${API_BASE}/api/hexo/detail?filename=${filename}`);
+            const data = await res.json();
+
+            if (data.code === 200) {
+                titleInput.value = data.data.title;
+
+                // 直接使用后端返回的纯文本
+                contentInput.value = data.data.content;
+
+                isEditing = true;
+                currentEditFilename = filename;
+
+                publishBtn.textContent = '💾 保存修改';
+                publishBtn.style.background = '#28a745';
+                publishBtn.onclick = saveEdit;
+
+                msgSpan.textContent = `正在编辑：${filename}`;
+
+                window.scrollTo(0, 0);
+            }
+        }
+
+
+
+
+        // 保存修改
+        async function saveEdit() {
+            if (!currentEditFilename) {
+                alert('错误：未找到文件名');
+                return;
+            }
+
+            const title = document.getElementById('title').value;
+            const content = document.getElementById('content').value;
+
+            try {
+                const res = await fetch(`${API_BASE}/api/hexo/update`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ filename: currentEditFilename, title, content })
+                });
+                const data = await res.json();
+
+                if (data.code === 200) {
+                    alert('✅ 修改成功！');
+                    resetForm();
+                    loadPosts();
+                    loadDbPosts();
+                } else {
+                    alert('❌ ' + data.message);
+                }
+            } catch (e) {
+                alert('❌ 网络错误');
+            }
+        }
+
+        // 重置表单 - 不再隐藏摘要框（由 publishPost 控制）
+        function resetForm() {
+            document.getElementById('title').value = '';
+            document.getElementById('content').value = '';
+            document.getElementById('publishMsg').textContent = '';
+
+            isEditing = false;
+            currentEditFilename = '';
+
+            const publishBtn = document.getElementById('publishBtn');
+            if (publishBtn) {
+                publishBtn.textContent = '🚀 发布文章';
+                publishBtn.style.background = '#007bff';
+                publishBtn.onclick = publishPost;
+            }
+        }
+
+        // 删除文章
+        async function deletePost(filename) {
+            if (!confirm(`确定要删除文章 "${filename}" 吗？`)) return;
+            try {
+                const res = await fetch(`${API_BASE}/api/hexo/delete`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ filename })
+                });
+                const data = await res.json();
+                if (data.code === 200) {
+                    alert('✅ 删除成功！');
+                    loadPosts();
+                    loadDbPosts();
+                } else {
+                    alert('❌ ' + data.message);
+                }
+            } catch (e) {
+                alert('❌ 网络错误');
+            }
+        }
+
+        // 加载 Hexo 文章列表
+        async function loadPosts() {
+            const listDiv = document.getElementById('postList');
+            listDiv.innerHTML = '<div class="loading">加载中...</div>';
+
+            try {
+                const res = await fetch(`${API_BASE}/api/hexo/list`);
+                const data = await res.json();
+
+                if (data.code === 200) {
+                    let html = '';
+                    if (data.data.length === 0) {
+                        html = '<div style="text-align:center; color:#999; padding:20px;">暂无文章</div>';
+                    } else {
+                        data.data.forEach(post => {
+                            html += `
+                        <div class="post-item">
+                            <div style="flex:1;">
+                                <span class="post-title">${post.title}</span>
+                                ${post.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+                                <div style="font-size:12px; color:#999; margin-top:4px;">文件：${post.filename}</div>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <span class="post-date">${post.date}</span>
+                                <button onclick="prepEdit('${post.filename}')" style="padding:4px 8px; font-size:12px; background:#ffc107; color:#333;">编辑</button>
+                                <button onclick="deletePost('${post.filename}')" style="padding:4px 8px; font-size:12px; background:#dc3545;">删除</button>
+                            </div>
+                        </div>
+                    `;
+                        });
+                    }
+                    listDiv.innerHTML = html;
+                }
+            } catch (e) {
+                listDiv.innerHTML = '<div class="error">加载失败</div>';
+            }
+        }
+
+        // 加载数据库列表
+        async function loadDbPosts() {
+            const listDiv = document.getElementById('dbPostList');
+            const statusSpan = document.getElementById('redisStatus');
+            listDiv.innerHTML = '<div class="loading">加载中...</div>';
+            statusSpan.textContent = '查询中...';
+            statusSpan.style.background = '#eee';
+
+            try {
+                const res = await fetch(`${API_BASE}/api/blog/list`);
+                const data = await res.json();
+
+                if (data.code === 200) {
+                    if (data.fromRedis) {
+                        statusSpan.textContent = '🚀 数据来源：Redis 缓存 (命中)';
+                        statusSpan.style.background = '#d4edda';
+                        statusSpan.style.color = '#155724';
+                    } else {
+                        statusSpan.textContent = '💾 数据来源：MySQL 数据库 (直连)';
+                        statusSpan.style.background = '#fff3cd';
+                        statusSpan.style.color = '#856404';
+                    }
+
+                    let html = '';
+                    data.data.forEach(post => {
+                        html += `
+                    <div class="post-item">
+                        <div>
+                            <span class="post-title">${post.title}</span>
+                            <span class="tag">MySQL ID: ${post.id}</span>
+                        </div>
+                        <span class="post-date">${new Date(post.createdAt).toLocaleString()}</span>
+                    </div>
+                `;
+                    });
+                    listDiv.innerHTML = html || '<div class="loading">暂无数据</div>';
+                }
+            } catch (e) {
+                listDiv.innerHTML = '<div class="error">加载失败</div>';
+            }
+        }
+
+
+        // AI 生成完整文章
+        async function aiGenerateArticle() {
+            const title = document.getElementById('title').value;
+            const keywords = document.getElementById('keywords').value;
+            const msgSpan = document.getElementById('publishMsg');
+            const contentInput = document.getElementById('content');
+
+            if (!title) {
+                alert('请先输入文章标题或关键词！');
+                return;
+            }
+
+            msgSpan.textContent = '🤖 AI 正在生成文章，请稍候...（约 10-30 秒）';
+            msgSpan.className = 'loading';
+
+            try {
+                const res = await fetch(`${API_BASE}/api/hexo/ai-generate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, keywords })
+                });
+                const data = await res.json();
+
+                if (data.code === 200) {
+                    contentInput.value = data.data.content;
+                    // 自动填充摘要
+                    if (data.data.summary) {
+                        document.getElementById('aiSummaryText').textContent = data.data.summary;
+                        document.getElementById('aiSummaryBox').style.display = 'block';
+                    }
+                    msgSpan.textContent = '✅ AI 文章生成成功！可修改后发布';
+                    msgSpan.className = 'success';
+                } else {
+                    msgSpan.textContent = '❌ ' + data.message;
+                    msgSpan.className = 'error';
+                }
+            } catch (e) {
+                msgSpan.textContent = '❌ 网络错误';
+                msgSpan.className = 'error';
+            }
+        }
+
+        // AI 润色内容
+        async function aiPolishContent() {
+            const content = document.getElementById('content').value;
+            const msgSpan = document.getElementById('publishMsg');
+
+            if (!content || content.length < 50) {
+                alert('请先输入至少 50 字的内容！');
+                return;
+            }
+
+            if (!confirm('AI 润色将修改当前内容，确定继续吗？')) {
+                return;
+            }
+
+            msgSpan.textContent = '🤖 AI 正在润色，请稍候...';
+            msgSpan.className = 'loading';
+
+            try {
+                const res = await fetch(`${API_BASE}/api/hexo/polish`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content })
+                });
+                const data = await res.json();
+
+                if (data.code === 200) {
+                    document.getElementById('content').value = data.data.polished;
+                    msgSpan.textContent = '✅ AI 润色成功！';
+                    msgSpan.className = 'success';
+                } else {
+                    msgSpan.textContent = '❌ ' + data.message;
+                    msgSpan.className = 'error';
+                }
+            } catch (e) {
+                msgSpan.textContent = '❌ 网络错误';
+                msgSpan.className = 'error';
+            }
+        }
+
+        // AI 生成摘要（单独使用）
+        async function aiGenerateSummary() {
+            const title = document.getElementById('title').value;
+            const content = document.getElementById('content').value;
+            const msgSpan = document.getElementById('publishMsg');
+
+            if (!title || !content) {
+                alert('请先输入标题和内容！');
+                return;
+            }
+
+            msgSpan.textContent = '🤖 AI 正在生成摘要...';
+            msgSpan.className = 'loading';
+
+            try {
+                // 复用发布接口的 AI 摘要功能
+                const res = await fetch(`${API_BASE}/api/hexo/publish`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, content })
+                });
+                const data = await res.json();
+
+                if (data.code === 200) {
+                    document.getElementById('aiSummaryText').textContent = data.data.aiSummary;
+                    document.getElementById('aiSummaryBox').style.display = 'block';
+                    msgSpan.textContent = '✅ AI 摘要生成成功！';
+                    msgSpan.className = 'success';
+                } else {
+                    msgSpan.textContent = '❌ ' + data.message;
+                    msgSpan.className = 'error';
+                }
+            } catch (e) {
+                msgSpan.textContent = '❌ 网络错误';
+                msgSpan.className = 'error';
+            }
+        }
+
+
+        // 初始化
+        loadPosts();
+        loadDbPosts();</script></body></html></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror='this.onerror=null,this.src="/img/friend_404.gif"' alt="avatar"></div><div class="author-info-name">karana</div><div class="author-info-description">毕业设计</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">36</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1GJ411x7h7/?spm_id_from=333.337.search-card.all.click&amp;vd_source=403872fe41cb370b69a97d7daacb65c7"><i class="fab fa-github"></i><span>点击有惊喜！</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">毕业设计</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/30/2026-03-30-%E4%B8%AD%E4%BA%8C%E8%8A%82%E5%A5%8F/" title="中二节奏">中二节奏</a><time datetime="2026-03-30T04:40:37.000Z" title="发表于 2026-03-30 12:40:37">2026-03-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/30/2026-03-30-%E5%9F%BA%E4%BA%8ENode.js+Hexo+Koa2+Redis%E7%9A%84%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" title="基于Node.js+Hexo+Koa2+Redis的个人博客搭建">基于Node.js+Hexo+Koa2+Redis的个人博客搭建</a><time datetime="2026-03-30T02:46:49.000Z" title="发表于 2026-03-30 10:46:49">2026-03-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/16/2026-03-16-%E8%88%9E%E8%90%8CDX%E4%BB%8B%E7%BB%8D2/" title="舞萌DX介绍2">舞萌DX介绍2</a><time datetime="2026-03-16T07:31:28.000Z" title="发表于 2026-03-16 15:31:28">2026-03-16</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/16/2026-03-16-%E8%88%9E%E8%90%8CDX%E4%BB%8B%E7%BB%8D/" title="舞萌DX介绍">舞萌DX介绍</a><time datetime="2026-03-16T07:28:54.000Z" title="发表于 2026-03-16 15:28:54">2026-03-16</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/16/2026-03-16-Redis%20%E7%BC%93%E5%AD%98%E4%BC%98%E5%8C%96%E5%AE%9E%E8%B7%B5/" title="Redis 缓存优化实践">Redis 缓存优化实践</a><time datetime="2026-03-16T07:26:14.000Z" title="发表于 2026-03-16 15:26:14">2026-03-16</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline"><i class="fas fa-folder-open"></i> <span>分类</span></div><ul class="card-category-list" id="aside-cat-list"><li class="card-category-list-item"><a class="card-category-list-link" href="/categories/python%E4%BD%9C%E4%B8%9A/"><span class="card-category-list-name">python作业</span><span class="card-category-list-count">8</span></a></li><li class="card-category-list-item"><a class="card-category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/"><span class="card-category-list-name">技术</span><span class="card-category-list-count">15</span></a></li><li class="card-category-list-item"><a class="card-category-list-link" href="/categories/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E4%BD%9C%E4%B8%9A/"><span class="card-category-list-name">软件工程作业</span><span class="card-category-list-count">12</span></a></li></ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/Node-js/" style="font-size:1.5em;color:#99a9bf">Node.js</a> <a href="/tags/%E6%AF%95%E8%AE%BE/" style="font-size:1.5em;color:#99a9bf">毕设</a> <a href="/tags/AI/" style="font-size:1.3em;color:#99a1ac">AI</a> <a href="/tags/Updated/" style="font-size:1.1em;color:#999">Updated</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i> <span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2026/03/"><span class="card-archive-list-date">三月 2026 </span><span class="card-archive-list-count">15</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2025/05/"><span class="card-archive-list-date">五月 2025 </span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2025/04/"><span class="card-archive-list-date">四月 2025 </span><span class="card-archive-list-count">6</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2025/03/"><span class="card-archive-list-date">三月 2025 </span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/09/"><span class="card-archive-list-date">九月 2024 </span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/05/"><span class="card-archive-list-date">五月 2024 </span><span class="card-archive-list-count">6</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/04/"><span class="card-archive-list-date">四月 2024 </span><span class="card-archive-list-count">5</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/03/"><span class="card-archive-list-date">三月 2024 </span><span class="card-archive-list-count">1</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站信息</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">36</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总浏览量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastpushdate="2026-03-31T02:52:17.034Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By karana</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.0.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.min.js"></script></div></body></html>
